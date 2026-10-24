@@ -1,0 +1,303 @@
+<title>WIDS Poster</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout: single A1 portrait sheet, two-column body under a full-width header,
+   footer band. On screen it scales to fit; printing at A1 gives the real size. */
+:root{
+  --ink:#0e1a24;        /* near-black blue, deliberate cool bias */
+  --ink-soft:#43586a;
+  --paper:#f5f3ec;      /* warm neutral paper */
+  --panel:#ffffff;
+  --line:#c9d2d9;
+  --accent:#0b6e75;     /* teal — "signal/radio" feel */
+  --accent-deep:#083f49;
+  --alert:#c23b22;      /* deauth / attack red */
+  --good:#1f8a5b;       /* normal / safe green */
+  --amber:#c98a12;
+  --grid:#e7e3d8;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  --sans:"Barlow","Helvetica Neue",Arial,sans-serif;
+  --disp:"Archivo","Barlow",sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --ink:#eaf1f4; --ink-soft:#a9bcc7; --paper:#0c1419; --panel:#121e26;
+  --line:#2a3b46; --grid:#1b2831; --accent:#3fb9c0; --accent-deep:#8fe0e4;
+  --alert:#ff6a4d; --good:#4fd08a; --amber:#f0b64a; color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --ink:#eaf1f4; --ink-soft:#a9bcc7; --paper:#0c1419; --panel:#121e26;
+  --line:#2a3b46; --grid:#1b2831; --accent:#3fb9c0; --accent-deep:#8fe0e4;
+  --alert:#ff6a4d; --good:#4fd08a; --amber:#f0b64a; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--sans);margin:0;
+  line-height:1.4;-webkit-font-smoothing:antialiased}
+.sheet{width:100%;max-width:1180px;margin:0 auto;
+  padding-left:max(16px,env(safe-area-inset-left,0px));
+  padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-block:22px}
+/* A1 aspect for print */
+@page{size:A1 portrait;margin:14mm}
+h1,h2,h3{text-wrap:balance;margin:0}
+.eyebrow{font-family:var(--mono);text-transform:uppercase;letter-spacing:.18em;
+  font-size:.72rem;color:var(--accent);font-weight:600}
+
+/* header */
+header{border:2px solid var(--ink);background:var(--panel);border-radius:10px;
+  padding:26px 30px;display:grid;grid-template-columns:1fr auto;gap:18px;align-items:center}
+header h1{font-family:var(--disp);font-size:3.0rem;font-weight:800;line-height:1.02;
+  letter-spacing:-.015em}
+header .sub{color:var(--ink-soft);font-size:1.12rem;margin-top:8px;max-width:62ch}
+.badge{font-family:var(--mono);font-size:.74rem;text-align:right;color:var(--ink-soft);
+  border-left:1px solid var(--line);padding-left:18px;line-height:1.7}
+.badge b{color:var(--ink)}
+
+/* columns */
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:20px}
+@media(max-width:760px){.cols{grid-template-columns:1fr}header{grid-template-columns:1fr}
+  .badge{border-left:0;border-top:1px solid var(--line);padding-left:0;padding-top:12px;text-align:left}}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:20px 22px}
+.panel h2{font-family:var(--disp);font-size:1.5rem;font-weight:800;margin-bottom:4px}
+.panel h2 .n{color:var(--accent);font-family:var(--mono);font-size:1rem;margin-right:8px}
+.panel p{color:var(--ink-soft);font-size:1rem;margin:.5em 0}
+.full{grid-column:1 / -1}
+
+/* pipeline diagram */
+.flow{display:flex;flex-wrap:wrap;align-items:stretch;gap:0;margin-top:10px}
+.step{flex:1;min-width:150px;background:var(--paper);border:1.5px solid var(--line);
+  border-radius:8px;padding:12px 14px;position:relative}
+.step .k{font-family:var(--mono);font-size:.68rem;color:var(--accent);text-transform:uppercase;
+  letter-spacing:.1em}
+.step .t{font-weight:700;font-size:1.02rem;margin-top:3px}
+.step .d{font-size:.84rem;color:var(--ink-soft);margin-top:4px}
+.arrow{align-self:center;color:var(--accent);font-weight:800;padding:0 8px;font-size:1.3rem}
+@media(max-width:760px){.arrow{transform:rotate(90deg);padding:6px 0;width:100%;text-align:center}}
+
+/* feature chips */
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.chip{font-family:var(--mono);font-size:.8rem;background:var(--grid);border:1px solid var(--line);
+  border-radius:999px;padding:5px 11px}
+.chip.hot{border-color:var(--accent);color:var(--accent-deep);background:color-mix(in srgb,var(--accent) 14%,transparent);font-weight:600}
+
+/* confusion matrix */
+.cm{display:grid;grid-template-columns:auto 1fr 1fr;gap:6px;margin-top:12px;
+  font-family:var(--mono);font-size:.92rem}
+.cm .cell{border:1px solid var(--line);border-radius:7px;padding:14px 10px;text-align:center;background:var(--paper)}
+.cm .hd{background:transparent;border:0;align-self:center;color:var(--ink-soft);font-size:.78rem;
+  text-transform:uppercase;letter-spacing:.06em}
+.cm .tp{background:color-mix(in srgb,var(--good) 20%,transparent);border-color:var(--good)}
+.cm .tn{background:color-mix(in srgb,var(--good) 20%,transparent);border-color:var(--good)}
+.cm .fn{background:color-mix(in srgb,var(--alert) 18%,transparent);border-color:var(--alert)}
+.cm .fp{background:color-mix(in srgb,var(--amber) 16%,transparent);border-color:var(--amber)}
+.cm .big{font-size:1.7rem;font-weight:800;display:block;line-height:1}
+.cm .lbl{font-size:.68rem;color:var(--ink-soft);display:block;margin-top:5px;text-transform:uppercase;letter-spacing:.05em}
+
+/* metrics tiles */
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:4px}
+@media(max-width:760px){.tiles{grid-template-columns:repeat(2,1fr)}}
+.tile{background:var(--paper);border:1px solid var(--line);border-radius:9px;padding:14px;text-align:center}
+.tile .v{font-family:var(--disp);font-size:2.1rem;font-weight:800;color:var(--accent-deep);
+  font-variant-numeric:tabular-nums}
+.tile .l{font-size:.78rem;color:var(--ink-soft);margin-top:3px}
+
+/* importance bars */
+.bars{margin-top:12px;display:flex;flex-direction:column;gap:9px}
+.bar{display:grid;grid-template-columns:150px 1fr 48px;gap:10px;align-items:center;font-size:.86rem}
+.bar .name{font-family:var(--mono);font-size:.78rem}
+.bar .track{height:16px;background:var(--grid);border-radius:5px;overflow:hidden}
+.bar .fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-deep));border-radius:5px}
+.bar .pct{font-family:var(--mono);font-size:.78rem;text-align:right;color:var(--ink-soft)}
+
+/* terminal */
+.term{background:#0b1418;color:#d6e6e8;border-radius:9px;padding:16px 18px;font-family:var(--mono);
+  font-size:.82rem;line-height:1.55;overflow-x:auto;border:1px solid #16303a;
+  white-space:pre;tab-size:2}
+.term .ok{color:#5fd08a}.term .al{color:#ff7a5c;font-weight:700}.term .dim{color:#6f8a93}
+.term .wi{color:#f0b64a}
+
+ul.clean{margin:.4em 0 0;padding-left:1.1em}
+ul.clean li{margin:.35em 0;font-size:.96rem}
+ul.clean li::marker{color:var(--accent)}
+.note{border-left:3px solid var(--accent);padding:4px 0 4px 14px;color:var(--ink-soft);font-size:.92rem}
+.warn{border-left:3px solid var(--alert)}
+footer{margin-top:20px;border:1px solid var(--line);border-radius:10px;background:var(--panel);
+  padding:16px 22px;display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center;font-size:.9rem;color:var(--ink-soft)}
+@media(max-width:760px){footer{grid-template-columns:1fr}}
+footer b{color:var(--ink)}
+.kbd{font-family:var(--mono);background:var(--grid);border:1px solid var(--line);border-radius:5px;padding:1px 6px;font-size:.82em}
+</style>
+
+<div class="sheet">
+
+  <header>
+    <div>
+      <div class="eyebrow">Wireless Security · Machine Learning</div>
+      <h1>Catching the Deauth Flood</h1>
+      <div class="sub">A lightweight Wi-Fi intrusion detection &amp; prevention system that learns the
+        difference between normal 802.11 traffic and a management-frame flood — and blocks the attacker automatically.</div>
+    </div>
+    <div class="badge">
+      <b>WIDS / WIPS prototype</b><br>
+      scikit-learn · Scapy · Python<br>
+      Random Forest classifier<br>
+      <b>Accuracy 99.5%</b> on unseen attacks<br>
+      <span style="color:var(--alert)">Lab/testbed use only</span>
+    </div>
+  </header>
+
+  <div class="cols">
+
+    <!-- LEFT COLUMN -->
+    <section class="panel full">
+      <h2><span class="n">01</span>How the system works</h2>
+      <p>Attacks like a <b>deauthentication flood</b> are not one strange frame — they are an abnormal
+        <i>burst</i> of management frames from one device. So the system groups frames into 1-second windows
+        per transmitter, measures a few simple things, and lets a classifier decide.</p>
+      <div class="flow">
+        <div class="step"><div class="k">Capture</div><div class="t">Read 802.11 frames</div>
+          <div class="d">A .pcap file, or a live monitor-mode interface. Same code path.</div></div>
+        <div class="arrow">→</div>
+        <div class="step"><div class="k">Features</div><div class="t">Per device / second</div>
+          <div class="d">14 simple numbers: frame rates, type mix, signal strength, spread.</div></div>
+        <div class="arrow">→</div>
+        <div class="step"><div class="k">Classify</div><div class="t">Random Forest</div>
+          <div class="d">Labels each window normal or malicious.</div></div>
+        <div class="arrow">→</div>
+        <div class="step" style="border-color:var(--alert)"><div class="k" style="color:var(--alert)">Respond</div>
+          <div class="t">Alert → Block</div>
+          <div class="d">WIDS logs an alert; WIPS blocklists the offending MAC.</div></div>
+      </div>
+      <div class="chips">
+        <span class="chip hot">rssi_std</span>
+        <span class="chip hot">frac_broadcast</span>
+        <span class="chip hot">deauth_per_sec</span>
+        <span class="chip">frames_per_sec</span>
+        <span class="chip">disassoc_per_sec</span>
+        <span class="chip">frac_mgmt / ctrl / data</span>
+        <span class="chip">rssi_mean / min</span>
+        <span class="chip">n_unique_dst</span>
+        <span class="chip">mean_size</span>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2><span class="n">02</span>The data</h2>
+      <p>20 synthetic capture scenarios built with Scapy, each ~20 s of a small
+        Wi-Fi network: an access point, 2–5 clients browsing and streaming, handshakes and
+        power-save frames.</p>
+      <ul class="clean">
+        <li><b>Normal traffic</b> includes a few <i>legitimate</i> deauth/disassoc frames (a client leaving),
+          so the model can't cheat with "any deauth = attack".</li>
+        <li><b>Attacks</b>: broadcast flood, targeted flood, low-rate stealth flood, disassociation
+          flood, rogue-MAC flood — each labelled per frame.</li>
+        <li>Every frame carries a RadioTap <b>signal strength</b> (dBm) and a ground-truth label.</li>
+      </ul>
+      <p class="note warn"><b>Ethics:</b> all frames are generated in memory and written to files.
+        Nothing is transmitted over the air. Live capture / attack generation is for an authorised,
+        isolated testbed only.</p>
+    </section>
+
+    <section class="panel">
+      <h2><span class="n">03</span>Why these features win</h2>
+      <p>Feature importances from the trained Random Forest. A flood gives itself away three ways: it is
+        <b>broadcast-heavy</b>, its deauth rate <b>spikes</b>, and the spoofing device's <b>signal wobbles</b>
+        more than a settled client's.</p>
+      <div class="bars">
+        <div class="bar"><span class="name">rssi_std</span><div class="track"><div class="fill" style="width:100%"></div></div><span class="pct">0.23</span></div>
+        <div class="bar"><span class="name">frac_broadcast</span><div class="track"><div class="fill" style="width:82%"></div></div><span class="pct">0.19</span></div>
+        <div class="bar"><span class="name">deauth_per_sec</span><div class="track"><div class="fill" style="width:48%"></div></div><span class="pct">0.11</span></div>
+        <div class="bar"><span class="name">frac_mgmt</span><div class="track"><div class="fill" style="width:43%"></div></div><span class="pct">0.10</span></div>
+        <div class="bar"><span class="name">frac_data</span><div class="track"><div class="fill" style="width:41%"></div></div><span class="pct">0.09</span></div>
+        <div class="bar"><span class="name">frames_per_sec</span><div class="track"><div class="fill" style="width:37%"></div></div><span class="pct">0.08</span></div>
+      </div>
+      <p style="font-size:.82rem;margin-top:10px">Top 6 of 14 features. The forest spreads credit across
+        correlated signals, so no single feature dominates. Exact values are printed by
+        <span class="kbd">train.py</span> and saved to <span class="kbd">results/feature_importance.png</span>.</p>
+    </section>
+
+    <!-- RESULTS -->
+    <section class="panel">
+      <h2><span class="n">04</span>Results</h2>
+      <p>Tested by holding out <b>whole capture scenarios</b> (a group split), so the model is scored on
+        attacks it never saw in training — no leakage.</p>
+      <div class="tiles">
+        <div class="tile"><div class="v">99.5%</div><div class="l">Accuracy</div></div>
+        <div class="tile"><div class="v">1.00</div><div class="l">Precision (attack)</div></div>
+        <div class="tile"><div class="v">0.88</div><div class="l">Recall (attack)</div></div>
+        <div class="tile"><div class="v">0</div><div class="l">False alarms</div></div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2><span class="n">05</span>Confusion matrix</h2>
+      <p style="margin-bottom:2px">Held-out test windows (rows = actual, columns = predicted).</p>
+      <div class="cm">
+        <div class="hd"></div><div class="hd">pred normal</div><div class="hd">pred attack</div>
+        <div class="hd">actual normal</div>
+        <div class="cell tn"><span class="big">421</span><span class="lbl">true normal</span></div>
+        <div class="cell fp"><span class="big">0</span><span class="lbl">false alarm</span></div>
+        <div class="hd">actual attack</div>
+        <div class="cell fn"><span class="big">2</span><span class="lbl">missed</span></div>
+        <div class="cell tp"><span class="big">14</span><span class="lbl">caught</span></div>
+      </div>
+      <p style="font-size:.86rem;margin-top:10px">The 2 misses are the first/last window of a short attack, when only
+        a handful of flood frames fall inside the window. A single Decision Tree scored 0.75 recall; the
+        Random Forest raises it to 0.88 with still zero false alarms.</p>
+    </section>
+
+    <!-- DEMO -->
+    <section class="panel full">
+      <h2><span class="n">06</span>Live detection &amp; automatic response</h2>
+      <p>Real-time replay of an attack capture. Normal traffic scrolls by; the moment the flood starts,
+        the window's <span class="kbd">deauth/s</span> jumps and the classifier fires. In WIPS mode the
+        offending MAC is blocklisted automatically.</p>
+      <div class="term">
+<span class="dim"> time  device              frm/s  deauth/s  signal  status</span>
+ 10.0  1c:2e:2b:b8:56:9d      54       0    -47dBm  <span class="ok">ok</span>
+ 11.0  1c:2e:2b:b8:56:9d     164     103    -57dBm  <span class="al">*** ATTACK ***</span>
+       <span class="wi">-&gt; WIPS blocked 1c:2e:2b:b8:56:9d</span>
+ 12.0  1c:2e:2b:b8:56:9d     194     144    -59dBm  <span class="al">*** ATTACK ***</span>
+ 13.0  10:0e:ba:ee:a3:c2      62       0    -61dBm  <span class="ok">ok</span>  <span class="dim">(real client, unaffected)</span>
+ 14.0  1c:2e:2b:b8:56:9d     195     143    -59dBm  <span class="al">*** ATTACK ***</span>
+<span class="dim">----------------------------------------------------------------</span>
+<span class="al">Attack mitigated.</span> Blocked: ['1c:2e:2b:b8:56:9d']  ·  WIPS would run:
+<span class="wi">iptables -A INPUT -m mac --mac-source 1c:2e:2b:b8:56:9d -j DROP</span>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2><span class="n">07</span>What I'd improve</h2>
+      <ul class="clean">
+        <li>Train and validate on a <b>real public dataset</b> (AWID3) and on live captures from an
+          authorised lab, not only synthetic traffic.</li>
+        <li>Add more attack classes: evil-twin / rogue AP, beacon flood, authentication flood, KRACK-style.</li>
+        <li>Make it <b>multi-class</b> (name the attack) instead of binary, and add a probability threshold
+          to trade recall against false alarms.</li>
+        <li>Shrink the window / use overlapping windows to catch the first second of an attack (the current misses).</li>
+        <li>Stream features continuously and push alerts to a dashboard; rate-limit the auto-block and add a
+          manual un-block.</li>
+      </ul>
+    </section>
+
+    <section class="panel">
+      <h2><span class="n">08</span>Use of AI assistants</h2>
+      <p>An AI coding assistant (Claude Code) helped <b>scaffold the Python modules</b>, explain Scapy's
+        802.11 frame fields and the scikit-learn API, and draft this poster.</p>
+      <p>I made the <b>design decisions</b> myself: per-device time-window features rather than per-frame;
+        including legitimate deauths in the normal class; and switching from a random split to a
+        <b>group split</b> after noticing the random split leaked windows and inflated the score. I verified
+        every number by running the code and reading the confusion matrix, and I can walk through how each
+        part works in the demo.</p>
+    </section>
+
+  </div>
+
+  <footer>
+    <div>
+      <b>Reproduce:</b> <span class="kbd">pip install -r requirements.txt</span> →
+      <span class="kbd">bash run_all.sh</span> — generates data, trains, evaluates, and runs the WIDS + WIPS demos.
+    </div>
+    <div><b>Detects:</b> deauth · disassoc · broadcast / targeted / stealth / rogue-MAC floods</div>
+  </footer>
+
+</div>

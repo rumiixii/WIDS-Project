@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+# bulky, regenerable training captures (recreate with: python src/generate_lab_traffic.py)
+data/train/
+# runtime logs written by the detector
+results/alerts.log
+results/blocklist.txt

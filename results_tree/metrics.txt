@@ -1,0 +1,7 @@
+model: decision_tree
+accuracy: 0.9908
+malicious precision: 1.0000
+malicious recall: 0.7500
+malicious f1: 0.8571
+confusion_matrix [[TN,FP],[FN,TP]]: [[421, 0], [4, 12]]
+test_scenarios: ['scenario_00_normal', 'scenario_01_normal', 'scenario_05_normal', 'scenario_08_targeted_flood', 'scenario_15_normal', 'scenario_17_targeted_flood']
